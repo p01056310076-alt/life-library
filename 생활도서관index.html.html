@@ -1,0 +1,1172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>생활도서관 | 생활의 지혜 미니앱</title>
+<meta name="description" content="세탁, 벌레퇴치, 냄새제거, 곰팡이, 주방위생, 자동차관리까지 - 12개 분야 36장의 생활 꿀팁 카드를 검색하고 즐겨찾기로 모아보는 미니앱입니다.">
+
+<!-- 카카오톡·페이스북 등 링크 공유 미리보기(Open Graph) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="생활도서관 | 생활의 지혜 미니앱">
+<meta property="og:description" content="세탁, 벌레퇴치, 냄새제거, 곰팡이, 주방위생, 자동차관리까지 - 12개 분야 36장의 생활 꿀팁 카드를 모은 미니앱이에요.">
+<meta property="og:image" content="cover.jpg">
+<!-- ⚠️ Netlify 등에 배포한 뒤 카카오톡 미리보기가 안 뜨면,
+     위 content="cover.jpg" 를 아래처럼 실제 전체 주소로 바꿔주세요.
+     예) content="https://본인주소.netlify.app/cover.jpg" -->
+
+<!-- 트위터(X) 카드 -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="생활도서관 | 생활의 지혜 미니앱">
+<meta name="twitter:description" content="12개 분야 36장의 생활 꿀팁 카드를 모은 미니앱">
+<meta name="twitter:image" content="cover.jpg">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  --bg: #241C16;
+  --bg-soft: #2E241C;
+  --card: #F3ECDA;
+  --card-line: #D8CBA8;
+  --ink: #231E17;
+  --ink-soft: #55493A;
+  --brass: #B08D57;
+  --brass-bright: #D8B978;
+  --tab-laundry: #3B5B77;
+  --tab-pest: #55693A;
+  --tab-odor: #B0812C;
+  --tab-stain: #9A4A32;
+  --tab-storage: #6B5A8A;
+  --tab-mold: #2F6B5E;
+  --tab-kitchen: #8C3B57;
+  --tab-season: #3E8B9E;
+  --tab-cooking: #C1652E;
+  --tab-appliance: #4A6670;
+  --tab-car: #4A4E8C;
+  --tab-shoegear: #7A5C3E;
+}
+*{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background: var(--bg);
+  color: var(--card);
+  font-family: 'IBM Plex Sans KR', sans-serif;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+a{ color:inherit; }
+
+.app{
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display:flex;
+  flex-direction:column;
+  padding-bottom: 30px;
+}
+
+header{
+  padding: 22px 18px 14px;
+  border-bottom: 1px solid rgba(216,185,120,0.22);
+  position: sticky;
+  top:0;
+  background: var(--bg);
+  z-index: 5;
+}
+.title-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 4px;
+}
+.hole{
+  width: 13px; height:13px; border-radius:50%;
+  border: 2px solid var(--brass-bright);
+  flex-shrink:0;
+}
+h1{
+  font-family:'Zilla Slab', serif;
+  font-size: 21px;
+  margin: 0;
+  font-weight: 700;
+}
+.sub{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 11.5px;
+  color: var(--brass-bright);
+  margin: 0 0 14px 23px;
+}
+
+.search-box{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background: var(--bg-soft);
+  border: 1px solid rgba(216,185,120,0.25);
+  border-radius: 20px;
+  padding: 9px 14px;
+}
+.search-box input{
+  flex:1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--card);
+  font-family:'IBM Plex Sans KR', sans-serif;
+  font-size: 14.5px;
+}
+.search-box input::placeholder{ color: var(--ink-soft); }
+.search-box svg{ flex-shrink:0; opacity:.7; }
+
+.chips{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding: 12px 0 2px;
+  scrollbar-width: none;
+}
+.chips::-webkit-scrollbar{ display:none; }
+.chip{
+  flex-shrink:0;
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  padding: 7px 13px;
+  border-radius: 16px;
+  border: 1px solid rgba(216,185,120,0.3);
+  color: var(--card-line);
+  background: transparent;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.chip.active{
+  background: var(--brass-bright);
+  color: var(--ink);
+  border-color: var(--brass-bright);
+  font-weight:600;
+}
+.chip.fav{ display:flex; align-items:center; gap:5px; }
+
+main{
+  flex:1;
+  padding: 6px 18px 10px;
+}
+
+.result-count{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin: 10px 0 12px;
+}
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+}
+
+.card-entry{
+  display:flex;
+  gap:12px;
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 4px;
+  padding: 15px 16px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+  border-left: 6px solid var(--accent);
+  cursor:pointer;
+  position:relative;
+}
+.card-entry .body{ flex:1; min-width:0; }
+.card-entry .tag{
+  display:inline-block;
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  color:#fff;
+  background: var(--accent);
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-bottom: 7px;
+}
+.card-entry h3{
+  font-family:'Zilla Slab', serif;
+  font-size: 16.5px;
+  margin: 0 0 5px;
+  line-height:1.35;
+}
+.card-entry p{
+  margin:0;
+  font-size: 13px;
+  color: var(--ink-soft);
+  display:-webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow:hidden;
+}
+.star-btn{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  padding: 2px;
+  align-self:flex-start;
+  flex-shrink:0;
+}
+.star-btn svg{ width:20px; height:20px; }
+
+.empty{
+  text-align:center;
+  padding: 60px 20px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.empty .big{
+  font-size: 34px;
+  margin-bottom: 10px;
+}
+
+/* Bottom sheet detail */
+.overlay{
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,0.55);
+  display:none;
+  z-index: 20;
+}
+.overlay.open{ display:block; }
+
+.sheet{
+  position:fixed;
+  left:0; right:0; bottom:0;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 18px 18px 0 0;
+  max-height: 86vh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform .28s ease;
+  z-index: 21;
+  padding: 10px 24px 34px;
+}
+.sheet.open{ transform: translateY(0); }
+.sheet-handle{
+  width:36px; height:4px;
+  background: var(--card-line);
+  border-radius: 2px;
+  margin: 8px auto 14px;
+}
+.sheet .callno{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-soft);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.sheet h2{
+  font-family:'Zilla Slab', serif;
+  font-size: 22px;
+  line-height:1.32;
+  margin: 8px 0 4px;
+}
+.sheet .meta-sub{
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed var(--card-line);
+}
+.sheet h3{
+  font-family:'Zilla Slab', serif;
+  font-size: 15.5px;
+  margin: 20px 0 8px;
+}
+.sheet ol, .sheet ul{ padding-left: 19px; margin:0 0 10px; }
+.sheet li{ margin-bottom: 7px; font-size: 14.5px; }
+.sheet .note{
+  margin-top: 18px;
+  padding: 12px 14px;
+  background: rgba(176,141,87,0.13);
+  border-left: 3px solid var(--brass);
+  font-size: 13.5px;
+  border-radius: 2px;
+}
+.close-x{
+  border:none; background:transparent; cursor:pointer;
+  color: var(--ink-soft);
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 12px;
+}
+.sheet-fav{
+  margin-top: 20px;
+  width:100%;
+  padding: 11px;
+  border-radius: 8px;
+  border: 1px solid var(--brass);
+  background: transparent;
+  color: var(--ink);
+  font-family:'IBM Plex Sans KR', sans-serif;
+  font-size: 13.5px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  cursor:pointer;
+}
+.sheet-fav.active{ background: var(--brass); color:#fff; }
+
+/* Share buttons */
+.share-btn{
+  margin-left: auto;
+  border: 1px solid rgba(216,185,120,0.3);
+  background: transparent;
+  color: var(--brass-bright);
+  border-radius: 50%;
+  width: 34px; height:34px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  flex-shrink:0;
+}
+.share-btn:active{ background: rgba(216,185,120,0.15); }
+.sheet-actions{ display:flex; align-items:center; gap:14px; }
+.icon-btn{
+  border:none; background:transparent; cursor:pointer;
+  color: var(--ink-soft);
+  display:flex; align-items:center;
+}
+
+/* Toast */
+.toast{
+  position:fixed;
+  left:50%; bottom:24px;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--brass-bright);
+  color: var(--ink);
+  font-family:'IBM Plex Sans KR', sans-serif;
+  font-size: 13.5px;
+  font-weight:600;
+  padding: 12px 20px;
+  border-radius: 22px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  opacity:0;
+  pointer-events:none;
+  transition: opacity .25s ease, transform .25s ease;
+  z-index: 40;
+  max-width: 88%;
+  text-align:center;
+}
+.toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+/* Cover screen */
+.cover{
+  position:fixed; inset:0;
+  background: var(--bg);
+  z-index: 50;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 24px;
+  transition: opacity .35s ease, visibility .35s ease;
+}
+.cover.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+.cover-inner{
+  max-width: 360px;
+  width:100%;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.cover-art{
+  position:relative;
+  width: 100%;
+  height: 100px;
+  margin-bottom: 6px;
+}
+.cover-card{
+  position:absolute;
+  left:50%;
+  width: 68%;
+  height: 62px;
+  background: var(--card);
+  border-radius: 4px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.4);
+}
+.cc1{ top:0; transform: translateX(-50%) rotate(-6deg); }
+.cc2{ top:14px; transform: translateX(-50%) rotate(3deg); background:#EFE6CE; }
+.cc3{ top:28px; transform: translateX(-50%) rotate(-1deg); background:#EAE0C4; }
+.cover-hole{
+  width:16px; height:16px; border-radius:50%;
+  border: 2px solid var(--brass-bright);
+  margin-bottom: 18px;
+}
+.cover-title{
+  font-family:'Zilla Slab', serif;
+  font-size: 32px;
+  font-weight:700;
+  margin: 0 0 8px;
+  color: var(--card);
+}
+.cover-tag{
+  font-size: 14px;
+  color: var(--card-line);
+  margin: 0 0 22px;
+  line-height:1.6;
+}
+.cover-stats{
+  display:flex;
+  align-items:center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.cover-stats .stat{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.cover-stats .stat b{
+  font-family:'Zilla Slab', serif;
+  font-size: 26px;
+  color: var(--brass-bright);
+  line-height:1;
+}
+.cover-stats .stat span{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+.stat-div{ width:1px; height:28px; background: rgba(216,185,120,0.3); }
+.cover-cats{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap: 7px;
+  margin-bottom: 30px;
+}
+.cover-cats span{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--card-line);
+  border: 1px solid rgba(216,185,120,0.25);
+  padding: 4px 10px;
+  border-radius: 14px;
+}
+.cover-btn{
+  width:100%;
+  padding: 15px;
+  border-radius: 26px;
+  border:none;
+  background: var(--brass-bright);
+  color: var(--ink);
+  font-family:'IBM Plex Sans KR', sans-serif;
+  font-size: 15px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+.cover-btn:active{ transform: scale(0.98); }
+
+/* Coupang affiliate disclosure + buy links */
+.disclosure{
+  margin-top: 10px;
+  font-size: 10.5px;
+  line-height:1.5;
+  color: #C9A24A;
+  background: rgba(216,185,120,0.1);
+  border: 1px solid rgba(216,185,120,0.25);
+  border-radius: 6px;
+  padding: 7px 10px;
+}
+.buy-links{
+  margin-top: 20px;
+}
+.buy-links .buy-label{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.buy-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  font-size: 13px;
+  font-weight:600;
+  padding: 8px 14px;
+  margin: 0 6px 6px 0;
+  border-radius: 18px;
+  background: #B08D57;
+  color:#fff;
+  text-decoration:none;
+}
+.buy-chip:active{ opacity:0.85; }
+</style>
+</head>
+<body>
+<div class="cover" id="cover">
+  <div class="cover-inner">
+    <div class="cover-art">
+      <div class="cover-card cc1"></div>
+      <div class="cover-card cc2"></div>
+      <div class="cover-card cc3"></div>
+    </div>
+    <div class="cover-hole"></div>
+    <h1 class="cover-title">생활도서관</h1>
+    <p class="cover-tag">매일의 불편함, 카드 한 장으로 정리했습니다</p>
+    <div class="cover-stats">
+      <div class="stat"><b>12</b><span>분야</span></div>
+      <div class="stat-div"></div>
+      <div class="stat"><b>36</b><span>카드</span></div>
+    </div>
+    <div class="cover-cats" id="coverCats"></div>
+    <button class="cover-btn" id="startBtn">카드 서랍 열기 →</button>
+  </div>
+</div>
+
+<div class="app" id="mainApp">
+  <header>
+    <div class="title-row">
+      <span class="hole"></span>
+      <h1>생활도서관</h1>
+      <button class="share-btn" id="shareBtn" title="미니앱 공유하기">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+      </button>
+    </div>
+    <div class="sub">12개 분야 · 36장의 카드로 찾는 생활의 지혜</div>
+    <div class="disclosure" id="disclosure" style="display:none;">
+      이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받을 수 있습니다.
+    </div>
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="예: 커피 얼룩, 바퀴벌레, 신발 냄새...">
+    </div>
+    <div class="chips" id="chips"></div>
+  </header>
+  <main>
+    <div class="result-count" id="resultCount"></div>
+    <div class="list" id="list"></div>
+  </main>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="callno">
+    <span id="sheetCallno"></span>
+    <div class="sheet-actions">
+      <button class="icon-btn" id="sheetShareBtn" title="이 카드 공유하기">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+      </button>
+      <button class="close-x" id="closeBtn">닫기 ✕</button>
+    </div>
+  </div>
+  <h2 id="sheetTitle"></h2>
+  <div class="meta-sub" id="sheetSub"></div>
+  <p id="sheetIntro"></p>
+  <h3>따라 하는 순서</h3>
+  <ol id="sheetSteps"></ol>
+  <h3>알아두면 좋은 점</h3>
+  <ul id="sheetExtra"></ul>
+  <div class="note" id="sheetNote"></div>
+  <div class="buy-links" id="sheetBuy"></div>
+  <button class="sheet-fav" id="sheetFavBtn"></button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+/* ============================================================
+   🛒 쿠팡파트너스 링크 연결 방법
+   1) 쿠팡파트너스(partners.coupang.com)에서 상품별 링크를 만드세요.
+   2) 아래 AFFILIATE_LINKS 객체에서 재료 이름 옆 ''(빈 칸)에
+      본인의 쿠팡파트너스 링크 주소를 붙여넣으세요.
+      예) '베이킹소다': 'https://link.coupang.com/a/여기에실제링크',
+   3) 링크를 하나라도 채우면 화면에 카드별 "구매하기" 버튼과
+      법적으로 반드시 필요한 고지 문구가 자동으로 함께 표시됩니다.
+      (고지 문구는 임의로 지우지 마세요 - 공정거래위원회 지침상 필수입니다)
+   4) 카드 속 "준비물" 문구에 아래 재료 이름이 포함되어 있으면
+      해당 카드 상세보기에 자동으로 구매 버튼이 나타납니다.
+   ============================================================ */
+const AFFILIATE_LINKS = {
+  /* 👇 아래 3개는 버튼이 뜨는 모습을 보여주기 위한 "샘플" 링크입니다.
+     실제 쿠팡파트너스 수익 링크가 아니라 일반 검색 링크이니,
+     실제 서비스 전에는 반드시 본인의 쿠팡파트너스 링크로 교체하세요. */
+  '베이킹소다': 'https://link.coupang.com/a/gJNwX7Qusu',
+  '과탄산소다': '',
+  '구연산': '',
+  '식초': 'https://link.coupang.com/a/gJNBwY2xps',
+  '소독용 알코올': '',
+  '과산화수소': '',
+  '굵은소금': '',
+  '레몬': '',
+  '신문지': '',
+  '결로방지테이프': '',
+  '뽁뽁이': '',
+  '핸드크림': '',
+  '가죽 전용 크림': '',
+  '베이비샴푸': '',
+  '보풀제거기': 'https://link.coupang.com/a/gJNjFy6OWW',
+  '투명 밀폐용기': '',
+  '라벨 스티커': '',
+  '케이블타이': '',
+  '중성세제': '',
+  '주방세제': 'https://link.coupang.com/a/gJNIpRl0hg',
+  '워셔액': '',
+  '숯': '',
+  '제습제': '',
+};
+
+/* 👆 위 목록은 "준비물"에 이름이 등장하는 카드마다 자동으로 버튼이 붙습니다.
+   반면 아래 TIP_EXTRA_LINKS는 준비물 텍스트에 이름이 없어도
+   특정 카드 하나에만 강제로 버튼을 붙이고 싶을 때 사용합니다. */
+const TIP_EXTRA_LINKS = {
+  'storage-closet': [{ name:'수납장', url:'https://link.coupang.com/a/gJNNEOzzQ4' }],
+  'cooking-egg':    [{ name:'계란삶기', url:'https://link.coupang.com/a/gJNQ6Y7Loa' }],
+};
+
+const CATS = [
+  { key:'laundry', name:'세탁', color:'var(--tab-laundry)' },
+  { key:'pest', name:'벌레퇴치', color:'var(--tab-pest)' },
+  { key:'odor', name:'냄새제거', color:'var(--tab-odor)' },
+  { key:'stain', name:'얼룩제거', color:'var(--tab-stain)' },
+  { key:'storage', name:'수납정리', color:'var(--tab-storage)' },
+  { key:'mold', name:'곰팡이제거', color:'var(--tab-mold)' },
+  { key:'kitchen', name:'주방위생', color:'var(--tab-kitchen)' },
+  { key:'season', name:'계절관리', color:'var(--tab-season)' },
+  { key:'cooking', name:'요리꿀팁', color:'var(--tab-cooking)' },
+  { key:'appliance', name:'가전관리', color:'var(--tab-appliance)' },
+  { key:'car', name:'자동차관리', color:'var(--tab-car)' },
+  { key:'shoegear', name:'신발가방관리', color:'var(--tab-shoegear)' },
+];
+
+const TIPS = [
+  { id:'laundry-yellowing', cat:'laundry', title:'흰옷 누렇게 변색됐을 때, 표백제 없이 되살리는 법',
+    meta:'누렇게 변한 흰옷을 과탄산소다와 뜨거운 물만으로 표백제 없이 하얗게 되살리는 방법입니다.',
+    sub:'준비물: 과탄산소다, 뜨거운 물 · 소요 시간: 3~4시간',
+    intro:'흰색 옷이 누렇게 변하는 건 대부분 땀, 피지, 세제 찌꺼기가 섬유에 쌓여 산화되기 때문입니다. 락스 없이도 과탄산소다만으로 충분히 되살릴 수 있습니다.',
+    steps:['50~60도 정도의 뜨거운 물을 대야에 받습니다.','물 4L 기준 과탄산소다 2~3큰술을 풀어 완전히 녹입니다.','옷을 넣고 3~4시간, 심하면 하룻밤 담가둡니다.','일반 세탁기 코스로 한 번 더 세탁하고 완전히 건조합니다.'],
+    extra:['색깔 있는 옷은 탈색될 수 있으니 흰옷에만 사용하세요.','울, 실크는 고온에 약하니 미온수로 낮춰 진행하세요.'],
+    note:'땀을 많이 흘린 흰옷은 벗은 즉시 찬물에 헹궈두면 변색을 예방할 수 있습니다.' },
+  { id:'laundry-wool-shrink', cat:'laundry', title:'줄어든 울 스웨터 되살리는 법 (베이비샴푸 활용)',
+    meta:'줄어든 니트나 울 옷을 베이비샴푸와 린스로 원래 크기로 되돌리는 방법입니다.',
+    sub:'준비물: 베이비샴푸(또는 린스) · 소요 시간: 30분 + 건조 하루',
+    intro:'울 섬유는 뜨거운 물이나 마찰에 닿으면 오그라들며 줄어듭니다. 린스의 컨디셔닝 성분이 섬유를 다시 풀어주는 역할을 합니다.',
+    steps:['미온수 5L에 베이비샴푸나 린스를 두 큰술 풀어줍니다.','옷을 넣고 눌러가며 15~20분간 담가둡니다.','물기를 짜지 말고 수건으로 눌러서만 제거합니다.','평평한 곳에서 원하는 사이즈로 당겨 모양을 잡고 자연 건조합니다.'],
+    extra:['건조 중간중간 모양을 다시 잡아주면 더 효과적입니다.','반 사이즈 여유를 두고 세탁하는 예방이 최선입니다.'],
+    note:'다음부터는 세탁망에 넣고 울 전용 세제로 찬물 손세탁하면 줄어드는 걸 크게 줄일 수 있습니다.' },
+  { id:'laundry-pilling', cat:'laundry', title:'니트 보풀 제거, 옷 상하지 않게 없애는 법',
+    meta:'니트나 코트에 생긴 보풀을 옷감 손상 없이 깔끔하게 제거하는 방법을 소개합니다.',
+    sub:'준비물: 보풀제거기(또는 일회용 면도기) · 소요 시간: 10~15분',
+    intro:'보풀은 섬유 마찰로 생긴 짧은 실오라기가 뭉친 것입니다. 억지로 잡아 뜯으면 옷감이 상하니 도구로 살살 밀어내는 것이 핵심입니다.',
+    steps:['옷을 평평한 곳에 펴고 보풀이 심한 부분을 먼저 확인합니다.','보풀제거기를 옷감 결 방향으로 가볍게 왕복시킵니다.','도구가 없다면 일회용 면도기를 세워 한 방향으로만 살살 밀어냅니다.','제거 후 옷솔로 남은 보풀 가루를 털어줍니다.'],
+    extra:['한 자리를 너무 오래 밀면 옷감이 얇아질 수 있으니 짧게 여러 번 나눠 진행하세요.','세탁망 사용과 뒤집어 세탁하는 습관이 보풀 자체를 줄여줍니다.'],
+    note:'보풀이 심하게 생기는 니트는 다른 옷과 분리해서 세탁하면 마찰이 줄어 예방됩니다.' },
+
+  { id:'pest-cockroach', cat:'pest', title:'바퀴벌레 퇴치, 베이킹소다 한 가지로 끝내는 법',
+    meta:'베이킹소다와 설탕만으로 만드는 바퀴벌레 트랩과 재발 방지 방법을 정리했습니다.',
+    sub:'준비물: 베이킹소다, 설탕 · 효과 체감: 1~2주',
+    intro:'바퀴벌레는 베이킹소다를 소화하지 못해 체내에 가스가 차 죽게 됩니다. 설탕은 유인 미끼 역할을 합니다.',
+    steps:['베이킹소다와 설탕을 1:1로 섞습니다.','싱크대 아래, 냉장고 뒤 등 출몰 지점에 종이컵이나 병뚜껑에 담아 놓습니다.','일주일에 한 번씩 새 것으로 교체하며 2~3주 유지합니다.','물기가 남는 곳을 매일 마른 걸레로 닦아 서식 환경을 없앱니다.'],
+    extra:['아이나 반려동물이 손댈 수 있는 위치는 피하세요.','택배 상자, 종이류를 오래 쌓아두지 않는 것도 중요합니다.'],
+    note:'개체 수가 많다면 베이킹소다 트랩과 붕산 젤 제품을 병행하면 더 빠릅니다.' },
+  { id:'pest-fruit-fly', cat:'pest', title:'초파리 순식간에 없애는 사과식초 트랩 만들기',
+    meta:'초파리를 하루 만에 줄이는 사과식초·주방세제 트랩과 재발 방지 팁입니다.',
+    sub:'준비물: 사과식초, 주방세제 · 효과 체감: 하루~이틀',
+    intro:'초파리는 발효 냄새가 나는 사과식초에 강하게 끌립니다. 세제는 표면장력을 없애 빠져나가지 못하게 합니다.',
+    steps:['종이컵에 사과식초를 2~3cm 높이로 붓습니다.','주방세제를 두세 방울 떨어뜨려 섞습니다.','과일, 쓰레기통 근처에 뚜껑 없이 두거나 랩에 구멍을 뚫어 덮습니다.','하루 이틀 간격으로 비우고 새로 채웁니다.'],
+    extra:['음식물 쓰레기는 밀폐하여 바로 비우는 것이 근본 예방책입니다.','배수구 초파리는 배수구 전용 세정제로 주 1회 관리하세요.'],
+    note:'트랩은 이미 발생한 초파리를 줄이는 방법이며, 과일을 실온에 오래 두지 않는 것이 가장 중요합니다.' },
+  { id:'pest-mosquito', cat:'pest', title:'모기 퇴치, 창문 없이도 효과보는 방법',
+    meta:'방충망이 없거나 환기가 어려운 집에서도 모기를 줄이는 실내 관리법을 소개합니다.',
+    sub:'준비물: 선풍기, 자기 전 스프레이(선택) · 효과 체감: 당일',
+    intro:'모기는 이산화탄소와 체온을 따라 사람에게 접근합니다. 공기 흐름을 바꿔주는 것만으로도 접근을 크게 줄일 수 있습니다.',
+    steps:['잠들기 전, 선풍기를 약하게 틀어 사람 쪽으로 바람이 흐르게 둡니다. 모기는 강한 기류를 싫어해 접근이 어려워집니다.','배수구, 화분 받침 등 집안의 고인 물을 모두 비웁니다. 모기 알이 자라는 자리입니다.','현관문을 열 때는 잠깐만 열고 빠르게 닫아 유입을 최소화합니다.','침실은 잠들기 30분 전 문을 닫아두고 미리 환기해 실내에 남은 모기를 내보냅니다.'],
+    extra:['어두운 색 옷보다는 밝은 색 옷이 모기를 덜 유인한다고 알려져 있습니다.','식물 화분 받침에 고인 물은 3일 이상 두지 않는 것이 좋습니다.'],
+    note:'이미 들어온 모기는 불을 끄고 휴대폰 손전등을 벽에 비추면 밝은 곳으로 모여드는 습성을 이용해 잡기 쉬워집니다.' },
+
+  { id:'odor-towel', cat:'odor', title:'수건 쉰내 완벽 제거법 (베이킹소다+식초 세탁)',
+    meta:'빨아도 계속 나는 수건 쉰내를 베이킹소다와 식초 이중 세탁으로 없애는 방법입니다.',
+    sub:'준비물: 베이킹소다, 식초 · 소요 시간: 세탁 2회 분량',
+    intro:'수건 쉰내는 섬유에 낀 세균과 세제 찌꺼기 때문에 생깁니다. 일반 세제만으로는 이 찌꺼기가 잘 빠지지 않습니다.',
+    steps:['수건만 모아 세제 없이 베이킹소다 반 컵을 넣고 뜨거운 물 코스로 한 번 돌립니다.','탈수 후 이번엔 식초 반 컵만 넣고 한 번 더 헹굼 코스를 돌립니다.','탈수 후 완전히 펼쳐서 통풍이 잘되는 곳에서 말립니다.'],
+    extra:['세탁 후 수건을 세탁기 안에 오래 방치하지 마세요.','섬유유연제를 매번 많이 쓰면 오히려 냄새 원인이 될 수 있습니다.'],
+    note:'세탁기 자체에서 냄새가 난다면 통 세척 코스를 함께 돌리는 것이 근본적인 해결책입니다.' },
+  { id:'odor-shoe', cat:'odor', title:'신발 냄새 없애는 5가지 생활 밀착 방법',
+    meta:'베이킹소다, 녹차 티백, 신문지로 신발과 신발장 냄새를 없애는 방법입니다.',
+    sub:'준비물: 베이킹소다, 녹차 티백, 신문지',
+    intro:'신발 냄새는 땀과 습기가 섬유 안에 갇혀 세균이 번식하며 나는 냄새입니다. 습기를 빠르게 없애는 것이 핵심입니다.',
+    steps:['면 주머니에 베이킹소다를 채워 신발 안에 하룻밤 넣어둡니다.','다 쓴 녹차 티백이나 말린 커피 찌꺼기를 신발 속에 넣어둡니다.','비 온 날 신은 신발은 신문지를 구겨 넣어 습기를 흡수시킵니다.','신발장은 자주 환기하고, 신발은 완전히 말린 뒤 넣습니다.'],
+    extra:['깔창만 따로 분리해 자주 세탁하면 냄새가 크게 줄어듭니다.','신발장 안 숯이나 제습제가 습기 관리에 도움이 됩니다.'],
+    note:'매일 번갈아 신어 완전히 말릴 시간을 주는 것이 가장 확실한 예방법입니다.' },
+  { id:'odor-bathroom', cat:'odor', title:'화장실 냄새, 환기 없이 줄이는 법',
+    meta:'창문이 없는 화장실에서도 냄새를 줄이는 배수구·변기 관리 방법을 소개합니다.',
+    sub:'준비물: 베이킹소다, 식초, 뚜껑 있는 컵 · 소요 시간: 15분',
+    intro:'화장실 냄새 대부분은 배수구 트랩에 낀 물때와 세균, 그리고 변기 안쪽 이음새에서 발생합니다. 환기가 어렵다면 발생원 자체를 줄여야 합니다.',
+    steps:['배수구에 베이킹소다 반 컵을 붓고 식초 반 컵을 이어서 부어 거품이 올라오게 합니다.','10분간 그대로 두었다가 뜨거운 물을 부어 마무리합니다.','변기 안쪽 물 닿는 라인을 변기솔로 매주 한 번 이상 닦아줍니다.','환풍기가 있다면 사용 후 10분 이상 켜두어 습기를 빼줍니다.'],
+    extra:['방향제보다 냄새 발생원 제거가 훨씬 오래갑니다.','수건이나 매트는 젖은 채로 오래 두지 말고 자주 교체하세요.'],
+    note:'배수구 관리는 한 번으로 끝나지 않으므로 2주에 한 번 정도 반복하는 것이 좋습니다.' },
+
+  { id:'stain-coffee', cat:'stain', title:'옷에 묻은 커피 얼룩, 시간 지나도 지우는 법',
+    meta:'말라붙은 커피 얼룩까지 주방세제와 식초로 깨끗하게 제거하는 방법입니다.',
+    sub:'준비물: 주방세제, 식초 · 소요 시간: 20~30분',
+    intro:'커피 얼룩은 탄닌 성분 때문에 시간이 지날수록 섬유에 단단히 자리잡습니다. 뜨거운 물로 바로 헹구면 오히려 고정되니 주의가 필요합니다.',
+    steps:['얼룩 부분을 뒤집어 안쪽에서 찬물로 먼저 헹굽니다.','주방세제를 얼룩에 바르고 손끝으로 부드럽게 문질러 스며들게 합니다.','식초를 물에 1:3으로 섞어 얼룩 위에 붓고 10분 둡니다.','미온수로 헹군 뒤 남아있다면 반복하고, 완전히 지워진 뒤에만 건조기를 사용합니다.'],
+    extra:['오래된 얼룩은 한 번에 지워지지 않으니 반복해서 진행하세요.','얼룩이 남은 채 건조기에 넣으면 얼룩이 영구적으로 고정될 수 있습니다.'],
+    note:'커피를 쏟은 직후라면 마른 티슈로 두드려 흡수만 시키고 문지르지 않는 것이 첫 번째 원칙입니다.' },
+  { id:'stain-oil', cat:'stain', title:'기름때·김치 국물 얼룩, 주방세제로 지우는 법',
+    meta:'옷에 튄 기름때와 김치 국물 얼룩을 주방세제와 베이킹소다로 지우는 방법입니다.',
+    sub:'준비물: 주방세제, 베이킹소다 · 소요 시간: 30분',
+    intro:'기름 성분은 물에 잘 녹지 않아 일반 세탁만으로는 잘 빠지지 않고, 김치 국물은 색과 기름기를 동시에 잡아야 합니다.',
+    steps:['얼룩에 주방세제를 원액 그대로 바르고 칫솔로 살살 두드리듯 문지릅니다.','베이킹소다와 물을 되직하게 섞어 얼룩 위에 덧발라 10분간 둡니다.','미온수로 충분히 헹궈 세제와 베이킹소다를 씻어냅니다.','옅게 남았다면 세탁 전 그 부분만 다시 세제를 발라 애벌빨래하듯 비빕니다.'],
+    extra:['진한 얼룩은 뜨거운 물에 먼저 닿으면 고정되니 찬물로 초벌 작업을 하세요.','실크나 울은 페이스트 대신 전문 세탁을 권장합니다.'],
+    note:'기름 얼룩이 묻은 직후엔 밀가루나 베이비파우더를 뿌려 먼저 흡착시키면 이후 세탁이 훨씬 쉬워집니다.' },
+  { id:'stain-ink', cat:'stain', title:'볼펜·잉크 얼룩 지우는 법',
+    meta:'옷이나 가방에 묻은 볼펜, 잉크 얼룩을 알코올로 안전하게 지우는 방법을 알려드립니다.',
+    sub:'준비물: 소독용 알코올, 흰 수건 · 소요 시간: 15분',
+    intro:'잉크는 색소가 섬유에 빠르게 스며들기 때문에 물보다 알코올로 색소를 녹여내는 것이 효과적입니다.',
+    steps:['얼룩 아래에 흰 수건이나 키친타월을 깔아 번짐을 막습니다.','소독용 알코올을 화장솜에 묻혀 얼룩을 두드리듯 톡톡 눌러줍니다. 문지르면 번질 수 있으니 누르는 동작만 반복합니다.','화장솜에 잉크가 옮겨오는 것이 보이면 깨끗한 면으로 계속 교체합니다.','얼룩이 옅어지면 찬물로 헹구고 평소처럼 세탁합니다.'],
+    extra:['가죽이나 색이 진한 옷감은 눈에 띄지 않는 부분에 먼저 테스트해보세요.','마른 지 오래된 얼룩일수록 여러 번 반복해야 합니다.'],
+    note:'잉크가 묻은 직후라면 문지르지 말고 마른 티슈로 먼저 눌러 흡수시키는 것이 번짐을 막는 핵심입니다.' },
+
+  { id:'storage-closet', cat:'storage', title:'옷장 공간 두 배로 늘리는 세로 수납 접는 법',
+    meta:'옷을 세워서 정리하는 세로 수납법으로 좁은 옷장 공간을 두 배로 활용하는 방법입니다.',
+    sub:'준비물: 없음 · 소요 시간: 옷 10벌당 5분',
+    intro:'옷을 눕혀서 쌓아두면 아래쪽 옷을 찾을 때마다 위에 쌓인 옷이 흐트러집니다. 세로로 세워두면 한눈에 보이고 공간도 넓게 쓸 수 있습니다.',
+    steps:['티셔츠는 소매를 몸판 쪽으로 접고, 아래에서 위로 3등분 접어 직사각형으로 만듭니다.','완성된 직사각형을 눕히지 않고 책처럼 세워서 나란히 꽂습니다.','비슷한 색상이나 종류끼리 구역을 나눠 세우면 찾기 쉬워집니다.','옷이 쓰러지면 얇은 책꽂이나 박스로 칸막이를 만들어줍니다.'],
+    extra:['니트류는 접힌 자국이 남을 수 있으니 얇은 옷부터 적용해보세요.','계절이 지난 옷은 압축팩으로 부피를 줄여 별도 보관하면 좋습니다.'],
+    note:'정리 후 자주 흐트러지는 칸만 나에게 맞게 접는 방식을 바꿔가는 것이 오래 유지하는 비결입니다.' },
+  { id:'storage-fridge', cat:'storage', title:'냉장고 정리, 투명 용기 하나로 유통기한 놓치지 않는 법',
+    meta:'투명 용기와 구역 정리만으로 냉장고 속 식재료 유통기한을 놓치지 않는 방법입니다.',
+    sub:'준비물: 투명 밀폐용기, 라벨 스티커 · 소요 시간: 30분',
+    intro:'식재료를 잊고 상하게 만드는 가장 큰 이유는 무엇이 어디 있는지 안 보이기 때문입니다. 투명 용기와 배치만 바꿔도 낭비가 크게 줄어듭니다.',
+    steps:['식재료를 모두 꺼내 유통기한을 확인하고 3일 이내로 먹어야 할 것을 따로 모읍니다.','투명 용기에 종류별로 담고 구입일이나 유통기한 라벨을 붙입니다.','가장 눈에 띄는 중간 칸을 먼저 먹을 음식 전용 구역으로 정합니다.','안쪽 깊숙한 칸은 장기 보관용, 문 쪽 칸은 자주 꺼내는 것으로 구역을 고정합니다.'],
+    extra:['일주일에 한 번 먼저 먹을 음식 구역만 확인하는 습관이 효과를 배가시킵니다.','장보기 전 냉장고 사진을 찍어두면 중복 구매를 막을 수 있습니다.'],
+    note:'냉장고를 가득 채우면 냉기 순환이 안 돼 보관 기간이 오히려 줄어드니 70% 정도만 채우는 것이 좋습니다.' },
+  { id:'storage-cable', cat:'storage', title:'케이블·전선 정리, 엉키지 않게 보관하는 법',
+    meta:'충전 케이블과 전선을 엉키지 않게 정리하고 보관하는 실전 방법을 소개합니다.',
+    sub:'준비물: 화장지심(또는 종이심), 케이블타이 · 소요 시간: 15분',
+    intro:'케이블은 아무렇게나 넣어두면 서로 엉키며 어떤 선이 어떤 용도인지 찾기 어려워집니다. 심을 이용해 세워 보관하면 한눈에 구분됩니다.',
+    steps:['다 쓴 화장지심이나 키친타월심을 모아둡니다.','각 케이블을 느슨하게 말아 케이블타이나 빵끈으로 고정합니다.','고정된 케이블을 종류별로 심 안에 하나씩 세워 넣습니다.','서랍이나 바구니에 심을 나란히 세워 보관하고, 용도를 적은 라벨을 붙입니다.'],
+    extra:['자주 쓰는 케이블은 손 닿기 쉬운 앞쪽에 배치하세요.','여행용 파우치에도 같은 방식으로 작게 응용할 수 있습니다.'],
+    note:'케이블 끝에 작은 라벨 스티커를 붙여두면 콘센트에 꽂았을 때도 어떤 기기인지 바로 알 수 있습니다.' },
+
+  { id:'mold-silicone', cat:'mold', title:'욕실 실리콘 틈새 곰팡이, 베이킹소다와 식초로 지우는 법',
+    meta:'욕실 실리콘과 타일 줄눈에 낀 까만 곰팡이를 베이킹소다 페이스트와 식초로 제거하는 방법입니다.',
+    sub:'준비물: 베이킹소다, 식초, 솔 · 소요 시간: 20~30분',
+    intro:'실리콘 틈에 낀 물때를 오래 방치하면 유기물이 쌓이며 곰팡이가 자리 잡습니다. 베이킹소다의 연마력과 식초의 산성이 함께 작용하면 화학 세제 없이도 상당 부분 지울 수 있습니다.',
+    steps:['베이킹소다 2스푼에 물을 조금씩 더해 되직한 페이스트를 만듭니다.','곰팡이가 낀 부분에 페이스트를 바르고 10분 정도 그대로 둡니다.','솔로 문질러 페이스트를 벗겨낸 뒤, 식초를 뿌려 다시 5~10분 둡니다.','물로 헹궈내고 마른 수건으로 물기를 완전히 닦아 습기가 남지 않게 합니다.'],
+    extra:['식초와 락스는 유해 가스가 발생할 수 있어 절대 함께 섞지 않습니다. 락스로 마무리하려면 반드시 물로 헹구고 완전히 건조한 뒤에 사용하세요.','묵은 곰팡이 자국은 한 번에 지워지지 않을 수 있으니 며칠 간격으로 반복해보세요.'],
+    note:'샤워 후 마른 수건이나 스퀴지로 물기를 한 번 걷어내는 습관만으로도 곰팡이가 다시 자리 잡는 속도를 크게 늦출 수 있습니다.' },
+  { id:'mold-wall', cat:'mold', title:'벽지·벽 곰팡이, 과산화수소로 깨끗하게 관리하는 법',
+    meta:'식초로도 안 지워지는 벽면 곰팡이 자국을 약국에서 구할 수 있는 과산화수소로 관리하는 방법입니다.',
+    sub:'준비물: 3% 과산화수소, 분무기 · 소요 시간: 20분',
+    intro:'오래된 곰팡이 얼룩은 표면만 닦아서는 잘 지워지지 않습니다. 과산화수소는 산화 작용으로 곰팡이 포자에 직접 작용해 얼룩과 냄새를 함께 줄이는 데 도움이 됩니다.',
+    steps:['약국이나 드럭스토어에서 구할 수 있는 3% 농도 과산화수소를 빈 분무기에 옮겨 담습니다.','곰팡이가 있는 벽면에 충분히 분사하고 10분 정도 그대로 둡니다.','마른 걸레나 솔로 가볍게 닦아냅니다. 과산화수소는 사용 후 물과 산소로 분해돼 잔여물이 거의 남지 않습니다.','벽면을 완전히 건조시키고, 필요하면 하루 뒤 한 번 더 반복합니다.'],
+    extra:['벽지 색이 진하거나 예민한 소재라면 눈에 띄지 않는 구석에 먼저 테스트해보세요.','곰팡이가 넓은 면적에 퍼져 있다면 원인이 되는 누수나 결로부터 먼저 점검하는 것이 근본적인 해결책입니다.'],
+    note:'벽 곰팡이는 대부분 환기 부족과 결로가 원인이므로, 하루 세 번 10분씩 환기하는 습관이 재발 방지에 가장 중요합니다.' },
+  { id:'mold-leather', cat:'mold', title:'가방·구두 가죽에 생긴 곰팡이, 손상 없이 제거하는 법',
+    meta:'장마철 눅눅한 옷장에서 가죽 가방이나 구두에 생긴 흰 곰팡이를 손상 없이 닦아내는 방법입니다.',
+    sub:'준비물: 소독용 알코올, 부드러운 천 · 소요 시간: 15분',
+    intro:'가죽 표면의 흰 곰팡이는 대부분 표면 오염으로, 젖은 천으로 문지르면 오히려 가죽 속으로 밀어 넣을 수 있습니다. 알코올을 소량만 사용해 가볍게 닦아내는 것이 안전합니다.',
+    steps:['부드러운 천에 소독용 알코올을 소량 묻힙니다. 흠뻑 적시지 않습니다.','곰팡이가 핀 부분을 살살 문질러 닦아냅니다.','완전히 마른 천으로 알코올 흔적을 한 번 더 닦아 습기를 남기지 않습니다.','그늘지고 통풍이 잘되는 곳에서 완전히 건조시킵니다.'],
+    extra:['가죽 종류에 따라 색이 빠질 수 있으니 눈에 띄지 않는 안쪽에서 먼저 테스트하세요.','보관할 때는 신문지나 실리카겔 제습제를 함께 넣어두면 재발을 줄일 수 있습니다.'],
+    note:'가죽 제품은 밀폐된 비닐보다 통풍되는 부직포 커버에 보관하는 것이 곰팡이 예방에 더 효과적입니다.' },
+
+  { id:'kitchen-microwave', cat:'kitchen', title:'전자레인지 냄새, 식초 스팀 하나로 없애는 법',
+    meta:'찌든 음식 냄새가 밴 전자레인지를 식초 스팀만으로 간단하게 청소하고 탈취하는 방법입니다.',
+    sub:'준비물: 식초, 물, 내열 용기 · 소요 시간: 10분',
+    intro:'전자레인지 냄새는 튄 음식물이 벽면에 눌어붙으며 나는 경우가 대부분입니다. 식초 수증기로 찌든 때를 불려주면 닦아내기가 훨씬 쉬워집니다.',
+    steps:['내열 용기에 물 한 컵과 식초 4큰술을 넣습니다.','전자레인지에 넣고 3~4분 가열해 수증기를 충분히 냅니다.','문을 닫은 채로 5분 정도 그대로 두어 벽면의 찌든 때를 불립니다.','마른 행주나 키친타월로 내부와 회전판을 닦아냅니다.'],
+    extra:['식초 냄새가 부담스럽다면 식초 대신 레몬즙 4작은술이나 레몬 껍질로 대체해도 비슷한 효과를 볼 수 있습니다.','기름때가 심하게 눌어붙은 자리는 베이킹소다 반 스푼을 젖은 행주에 묻혀 추가로 문질러주세요.'],
+    note:'청소 직후 문을 살짝 열어두면 남은 식초 냄새가 빠르게 사라지고, 오히려 음식 냄새를 중화하는 효과도 있습니다.' },
+  { id:'kitchen-cutting-board', cat:'kitchen', title:'도마 비린내와 얼룩, 소금과 레몬으로 없애는 법',
+    meta:'생선, 고기를 손질한 도마에 남은 비린내와 얼룩을 소금과 레몬으로 위생적으로 없애는 방법입니다.',
+    sub:'준비물: 굵은소금, 레몬(또는 레몬즙) · 소요 시간: 5분',
+    intro:'도마의 칼집 사이에는 세제로 닦아도 음식물과 냄새가 남기 쉽습니다. 굵은소금의 물리적 세정력과 레몬의 산 성분을 함께 쓰면 얼룩과 냄새를 동시에 잡을 수 있습니다.',
+    steps:['물기를 살짝 적신 도마 위에 굵은소금을 넉넉히 뿌립니다.','레몬을 반으로 잘라 단면으로 도마 전체를, 특히 칼집 사이를 문지릅니다.','소금과 레몬즙이 묻은 채로 2~3분 정도 그대로 둡니다.','미지근한 물로 헹구고 세워서 물기가 잘 빠지도록 건조합니다.'],
+    extra:['생선 비린내가 유독 심하다면 소금·레몬 세척 후 베이킹소다에 뜨거운 물을 부어 한 번 더 헹궈주면 효과가 더 좋습니다.','고기·생선용과 채소용 도마를 분리해서 쓰면 냄새와 교차 오염을 함께 줄일 수 있습니다.'],
+    note:'도마 냄새의 상당 부분은 세척 후 남은 물기에서 시작되므로, 눕혀 보관하지 않고 세워서 완전히 말리는 습관이 중요합니다.' },
+  { id:'kitchen-kettle', cat:'kitchen', title:'전기포트 하얀 물때, 구연산으로 안전하게 없애는 법',
+    meta:'전기포트 바닥에 쌓이는 하얀 석회질 물때를 구연산이나 식초로 안전하게 제거하는 방법입니다.',
+    sub:'준비물: 구연산(또는 식초) · 소요 시간: 30분',
+    intro:'전기포트의 하얀 물때는 물속 칼슘, 마그네슘 성분이 가열되며 남는 석회질입니다. 주방세제로는 잘 지워지지 않지만, 산성 성분인 구연산이나 식초로는 비교적 쉽게 분해할 수 있습니다.',
+    steps:['전기포트에 물을 2/3 정도 채웁니다.','구연산 1~2큰술(또는 식초 1~2큰술)을 넣습니다.','전원을 켜서 물을 끓인 뒤, 끄고 10~20분 정도 그대로 둡니다.','물을 버리고 깨끗한 물로 2~3회 헹군 뒤, 한 번 더 맹물을 끓였다가 버려 잔여물과 냄새를 없앱니다.'],
+    extra:['프린팅이 있는 손잡이나 플라스틱 부품은 색이 빠질 수 있으니 장시간 담가두지 않도록 주의하세요.','물때가 자주 낀다면 한 달에 한 번 정도 정기적으로 관리하는 것이 좋습니다.'],
+    note:'물때를 그대로 두면 세균이 번식하기 쉬운 환경이 되고 열전도 효율도 떨어지므로, 주기적인 관리가 위생과 전기료 모두에 도움이 됩니다.' },
+
+  { id:'season-condensation', cat:'season', title:'창문에 맺히는 결로, 곰팡이 생기기 전에 관리하는 법',
+    meta:'겨울철 창문에 맺히는 물방울(결로)을 환기와 간단한 도구로 줄이고 곰팡이를 예방하는 방법입니다.',
+    sub:'준비물: 신문지, 결로방지테이프(또는 뽁뽁이) · 소요 시간: 매일 10분',
+    intro:'결로는 실내외 온도 차와 높은 실내 습도가 겹칠 때 생깁니다. 방치하면 창틀과 벽에 곰팡이로 이어지기 쉬워, 물방울이 맺히는 즉시 관리하는 것이 중요합니다.',
+    steps:['물방울이 맺혀 있다면 마른 걸레로 바로 닦아내고, 선풍기나 드라이기로 한 번 더 건조시킵니다.','하루 세 번, 10분 정도 창문을 열어 환기하며 실내 습도를 40~60% 수준으로 유지합니다.','창틀 아래에 수건 대신 신문지를 깔아두면 여분의 습기를 흡수합니다.','결로가 심한 창문에는 결로방지테이프나 단열 뽁뽁이를 붙여 창문 표면 온도를 높여줍니다.'],
+    extra:['난방을 세게 틀수록 공기 중 수증기 양도 늘어 결로가 심해질 수 있으니, 적정 온도를 유지하며 환기를 병행하세요.','옷장이나 신발장에도 숯, 신문지 등을 넣어두면 습기 관리에 도움이 됩니다.'],
+    note:'결로를 방치한 자리는 곰팡이로 이어지기 쉬우므로, 물방울이 보이는 즉시 닦아내는 습관이 가장 확실한 예방법입니다.' },
+  { id:'season-static', cat:'season', title:'겨울철 정전기, 옷 입기 전 미리 막는 법',
+    meta:'건조한 겨울철 옷과 손끝에서 반복되는 정전기를 미리 예방하는 생활 밀착 방법입니다.',
+    sub:'준비물: 핸드크림(또는 정전기 방지 스프레이) · 소요 시간: 1분',
+    intro:'정전기는 공기가 건조할수록, 마찰이 클수록 잘 발생합니다. 옷을 입기 전 섬유 표면에 수분막을 만들어주면 전하 이동이 완화되어 정전기가 줄어듭니다.',
+    steps:['외출 전 손에 남은 핸드크림을 니트 소매 안쪽이나 코트 안감에 살짝 발라줍니다.','머리카락이 정전기로 뻗친다면 손끝에 아주 소량의 핸드크림이나 로션을 묻혀 머리카락 끝을 가볍게 쓸어줍니다.','자동차 문이나 금속 손잡이를 만지기 전, 열쇠나 동전 같은 금속을 먼저 짧게 접촉시켜 방전시킵니다.','세탁 시 헹굼 단계에서 섬유유연제를 사용하면 옷감 마찰이 줄어 정전기 발생 빈도가 낮아집니다.'],
+    extra:['섬유유연제는 면, 울 소재에는 효과가 좋지만 폴리에스터 같은 합성섬유에는 효과가 제한적일 수 있습니다.','실내가 건조할 때는 가습기나 젖은 수건을 널어 습도를 40% 이상으로 유지하는 것도 도움이 됩니다.'],
+    note:'정전기 방지 스프레이를 옷 안쪽에 가볍게 뿌려두는 것도 외출 전 간단하게 쓸 수 있는 방법입니다.' },
+  { id:'season-closet-damp', cat:'season', title:'눅눅한 옷장, 제습제 없이 습기 줄이는 법',
+    meta:'장마철이나 겨울철 눅눅해지는 옷장 습기를 숯, 신문지 같은 재료로 관리하는 방법입니다.',
+    sub:'준비물: 숯, 신문지(또는 베이킹소다) · 소요 시간: 10분',
+    intro:'옷장 안에 습기가 차면 냄새는 물론 곰팡이로도 이어지기 쉽습니다. 값비싼 제습제가 없어도 숯이나 신문지 같은 재료로 어느 정도 습기를 관리할 수 있습니다.',
+    steps:['숯을 뜨거운 물로 한 번 씻어 말린 뒤, 통풍되는 그물망이나 작은 바구니에 담아 옷장 구석에 놓아둡니다.','옷 사이사이나 서랍 바닥에 신문지를 깔아 여분의 습기를 흡수시킵니다.','베이킹소다를 뚜껑을 열어둔 작은 통에 담아 함께 넣어두면 습기와 냄새를 동시에 잡을 수 있습니다.','한 달에 한 번은 옷장 문을 활짝 열어 환기하고, 숯과 신문지는 젖은 정도를 보고 교체합니다.'],
+    extra:['옷을 옷장에 너무 빽빽하게 넣으면 공기가 통하지 않아 습기가 쉽게 찹니다. 여유 공간을 두고 정리하세요.','장마철에는 제습제나 숯의 교체 주기를 평소보다 짧게 잡는 것이 좋습니다.'],
+    note:'옷장 습기를 방치하면 곰팡이와 냄새로 이어지기 쉬우므로, 정기적인 환기가 가장 기본이자 효과적인 관리법입니다.' },
+
+  { id:'cooking-egg', cat:'cooking', title:'삶은 계란 껍질 한 번에 쏙 까지는 법',
+    meta:'삶을 때부터 식힐 때까지, 계란 껍질을 깨끗하게 쏙 까지게 만드는 손쉬운 방법을 소개합니다.',
+    sub:'준비물: 식초, 소금 · 소요 시간: 삶는 시간 + 5분',
+    intro:'계란 껍질이 잘 안 벗겨지는 건 신선한 달걀일수록 흰자와 속껍질이 단단히 붙어있기 때문입니다. 삶는 물에 재료를 더하고, 삶은 뒤 급랭시키는 두 단계만 지키면 훨씬 수월해집니다.',
+    steps:['냉장고에서 꺼낸 달걀은 삶기 전 실온에 20~30분 두어 온도차로 인한 파열을 줄입니다.','물에 소금 1큰술과 식초 1큰술을 넣고 달걀을 삶습니다. 소금은 삼투압으로 껍질과 흰자 사이를 벌려주고, 식초는 혹시 깨졌을 때 흰자가 흘러나오지 않게 응고시켜 줍니다.','다 삶은 달걀은 바로 건져 찬물(또는 얼음물)에 담가 충분히 식힙니다.','껍질에 살짝 금을 낸 뒤 찬물 속에서 굴리듯 까면 속껍질까지 한 번에 벗겨집니다.'],
+    extra:['냄비 뚜껑을 덮고 살살 흔들어 껍질에 잔금을 낸 뒤 까면 더 매끈하게 벗겨집니다.','오래된 달걀일수록 흰자와 껍질 사이 공간이 넓어 오히려 껍질이 잘 벗겨집니다.'],
+    note:'여러 개를 한 번에 까야 한다면, 껍질을 깐 뒤 뚜껑 있는 통에 물과 함께 넣고 흔드는 방법도 시간을 크게 줄여줍니다.' },
+  { id:'cooking-pot-burn', cat:'cooking', title:'냄비 탄 자국·눌은 자국 없애는 법',
+    meta:'밥이나 국물이 눌어붙어 새까맣게 탄 냄비 바닥을 세제 없이 베이킹소다로 지우는 방법입니다.',
+    sub:'준비물: 베이킹소다, 물 · 소요 시간: 20~30분',
+    intro:'냄비 바닥에 탄 자국은 탄수화물과 단백질이 고온에서 눌어붙어 생긴 것으로, 억지로 긁으면 냄비 코팅이 상할 수 있습니다. 베이킹소다로 불려서 떼어내는 것이 안전합니다.',
+    steps:['탄 냄비에 눌은 자국이 잠길 정도로 물을 붓습니다.','베이킹소다 2~3큰술을 넣고 끓입니다.','끓기 시작하면 불을 끄고 그대로 20~30분 식힙니다.','나무 주걱이나 부드러운 수세미로 문지르면 탄 자국이 쉽게 떨어져 나옵니다.'],
+    extra:['스테인리스 냄비는 한 번에 안 지워지면 같은 과정을 반복해도 괜찮지만, 코팅 냄비는 철수세미 대신 부드러운 수세미만 사용하세요.','눌은 정도가 심하면 베이킹소다를 넣고 다시 한번 짧게 끓이면 효과가 더 좋습니다.'],
+    note:'밥을 짓거나 국을 끓일 때 불 조절만 조금 신경 써도 눌음 자체를 크게 줄일 수 있습니다.' },
+  { id:'cooking-veggie-storage', cat:'cooking', title:'상추·대파, 마트에서 산 그대로 오래 보관하는 법',
+    meta:'쉽게 무르는 잎채소와 대파를 키친타월과 세로 보관법으로 2~3배 오래 신선하게 유지하는 방법입니다.',
+    sub:'준비물: 키친타월(또는 신문지), 지퍼백 · 소요 시간: 10분',
+    intro:'잎채소가 빨리 무르는 가장 큰 이유는 씻은 뒤 남은 물기입니다. 사 온 그대로, 씻지 않은 상태로 물기만 관리해 세워 보관하면 신선함이 훨씬 오래갑니다.',
+    steps:['상추는 씻지 말고 마른 키친타월로 잎 사이사이를 감싸 지퍼백에 넣고, 잎이 위를 향하게 세워서 냉장 보관합니다.','대파는 물기를 제거한 뒤 신문지로 감싸거나, 뿌리 쪽이 아래로 가게 세워서 보관합니다.','바로 쓰지 않을 대파는 씻어 송송 썬 뒤 물기를 완전히 빼고 밀폐용기에 소분해 냉동 보관합니다.','채소칸의 습도가 너무 낮으면 마르고, 너무 높으면 무르므로 키친타월이 축축해지면 새것으로 교체합니다.'],
+    extra:['상추는 이 방법으로 3~4주까지도 신선함이 유지될 수 있습니다.','토마토처럼 후숙 과일 채소는 오히려 냉장 보관하면 맛이 떨어지니 서늘한 실온 보관이 더 좋습니다.'],
+    note:'채소를 씻어서 바로 보관하면 표면 보호막이 손상돼 물러지는 속도가 더 빨라지므로, 먹기 직전에 씻는 것이 신선도 유지의 핵심입니다.' },
+
+  { id:'appliance-washer', cat:'appliance', title:'세탁기 통돌이 냄새, 베이킹소다·식초 통세척으로 없애는 법',
+    meta:'빨래에서 퀴퀴한 냄새가 날 때 세탁기 통 내부를 베이킹소다와 식초로 셀프 세척하는 방법입니다.',
+    sub:'준비물: 베이킹소다, 식초(또는 과탄산소다) · 소요 시간: 4시간(담금 포함)',
+    intro:'세탁기 통 뒤편은 완전히 마르지 않아 세제 찌꺼기와 곰팡이가 쌓이기 쉬운 구조입니다. 세제를 아무리 많이 써도 통 자체가 오염되어 있으면 냄새가 계속 납니다.',
+    steps:['세탁조에 뜨거운 물을 가득 채웁니다.','베이킹소다 반 컵과 식초 1컵을 넣습니다.','통세척 모드(없다면 표준 코스)로 4시간 이상 담가둡니다.','헹굼과 탈수를 진행하고, 세탁기 뚜껑을 열어 내부를 완전히 건조시킵니다.'],
+    extra:['오염이 심하면 과탄산소다를 추가하거나, 베이킹소다·구연산·과탄산소다를 1:1:1로 섞어 사용하면 더 효과적입니다.','세제 통과 고무 패킹은 별도로 분리해 칫솔로 닦아주면 냄새 재발을 줄일 수 있습니다.'],
+    note:'월 1회 정도 정기적으로 통세척을 하고, 사용 후에는 항상 문이나 뚜껑을 열어 건조시키는 것이 냄새 예방의 핵심입니다.' },
+  { id:'appliance-fridge-smell', cat:'appliance', title:'냉장고 냄새, 베이킹소다와 숯으로 잡는 법',
+    meta:'여러 음식 냄새가 섞인 냉장고를 베이킹소다와 숯, 커피 찌꺼기로 탈취하는 방법을 소개합니다.',
+    sub:'준비물: 베이킹소다(또는 숯, 커피 찌꺼기) · 소요 시간: 15분 + 지속 관리',
+    intro:'냉장고 냄새는 여러 음식의 휘발성 성분이 밀폐된 공간에 섞이며 나는 것입니다. 냉장고를 청소한 뒤에도 냄새 흡착제를 놓아두면 재발을 줄일 수 있습니다.',
+    steps:['냉장고 속 유통기한이 지난 음식과 정체불명의 용기를 먼저 정리합니다.','선반과 서랍을 꺼내 미온수에 희석한 베이킹소다 물로 닦고 완전히 건조시킵니다.','베이킹소다나 마른 숯, 다 쓴 커피 찌꺼기를 뚜껑을 연 작은 통에 담아 냉장실과 냉동실에 각각 놓아둡니다.','2~3주에 한 번씩 흡착제를 교체하거나 햇볕에 말려 재사용합니다.'],
+    extra:['김치나 젓갈처럼 냄새가 강한 음식은 밀폐 용기에 담아 다른 음식과 분리 보관하면 냄새 섞임을 줄일 수 있습니다.','레몬이나 오렌지 껍질을 잘라 넣어두면 은은한 향으로 탈취 효과를 더할 수 있습니다.'],
+    note:'근본적인 냄새 예방을 위해서는 음식물을 밀폐 보관하는 습관과 정기적인 냉장고 정리가 흡착제보다 더 중요합니다.' },
+  { id:'appliance-aircon-filter', cat:'appliance', title:'에어컨·선풍기 필터 청소, 곰팡이 냄새 막는 법',
+    meta:'에어컨과 선풍기 필터에 쌓인 먼지와 곰팡이 냄새를 계절 시작 전 셀프로 관리하는 방법입니다.',
+    sub:'준비물: 중성세제, 부드러운 솔 · 소요 시간: 30분 + 건조 반나절',
+    intro:'에어컨을 켤 때 나는 퀴퀴한 냄새는 대부분 필터와 내부 열교환기에 낀 먼지, 습기 속 곰팡이 때문입니다. 계절이 바뀔 때마다 필터만 관리해도 냄새를 크게 줄일 수 있습니다.',
+    steps:['전원을 끄고 필터를 분리한 뒤 청소기로 먼지를 먼저 제거합니다.','미온수에 중성세제를 희석해 필터를 담가 부드러운 솔로 살살 문질러 헹굽니다.','필터는 직사광선을 피해 그늘에서 완전히 건조시킨 뒤 다시 끼웁니다.','에어컨을 끄기 전 송풍 모드로 30분~1시간 정도 틀어 내부 습기를 말려줍니다.'],
+    extra:['필터는 2주에 한 번 정도 청소하는 것이 권장되며, 여름철 사용이 잦을 때는 더 자주 관리해주세요.','선풍기 날개도 분리해 같은 방법으로 세척하면 먼지 냄새를 줄일 수 있습니다.'],
+    note:'에어컨 사용 후 송풍 모드로 내부를 말려주는 습관 하나만으로도 곰팡이 냄새 발생을 크게 줄일 수 있습니다.' },
+
+  { id:'car-fog', cat:'car', title:'자동차 유리 김서림, 타기 전에 막는 법',
+    meta:'비 오는 날이나 겨울철 자동차 유리에 김이 서리는 것을 미리 막는 손쉬운 방법을 소개합니다.',
+    sub:'준비물: 린스(또는 주방세제), 부드러운 천 · 소요 시간: 5분',
+    intro:'김서림은 차량 내부와 외부의 온도 차로 유리 표면에 수증기가 응결되며 생깁니다. 유리 표면에 얇은 막을 만들어두면 김이 잘 맺히지 않습니다.',
+    steps:['부드러운 천에 린스나 주방세제를 소량 묻힙니다.','유리창 안쪽 면 전체에 얇게 펴 바릅니다.','마른 천으로 얼룩 없이 깨끗하게 닦아냅니다.','이미 김이 서렸다면 에어컨을 켜고 외기 순환 모드로 전환해 앞유리 쪽으로 바람을 보냅니다.'],
+    extra:['감자를 반으로 잘라 단면을 유리에 문질러도 전분 성분이 비슷한 효과를 냅니다.','장마철에는 김서림 방지제를 미리 발라두면 매번 닦는 수고를 줄일 수 있습니다.'],
+    note:'주행 중 갑자기 김이 서리면 창문을 살짝 열어 온도 차를 줄이는 것이 가장 빠른 임시 대처법입니다.' },
+  { id:'car-smell', cat:'car', title:'차 안 냄새, 방향제 없이 없애는 법',
+    meta:'담배, 음식 냄새가 밴 차량 내부를 방향제 없이 근본적으로 관리하는 방법입니다.',
+    sub:'준비물: 베이킹소다, 숯(선택) · 소요 시간: 20분 + 하루',
+    intro:'차 안 냄새는 좁은 밀폐 공간에 섬유 시트와 매트가 냄새를 흡수하며 오래 남는 경우가 많습니다. 방향제로 덮기보다 냄새를 흡착해 제거하는 것이 근본적입니다.',
+    steps:['매트를 꺼내 먼지를 털고, 시트와 바닥에 청소기를 꼼꼼히 돌립니다.','베이킹소다를 시트와 매트 위에 고르게 뿌리고 30분~하룻밤 그대로 둡니다.','청소기로 베이킹소다를 완전히 흡입해 제거합니다.','작은 숯 주머니를 컵홀더나 시트 아래에 놓아두면 이후 냄새 재흡착을 줄일 수 있습니다.'],
+    extra:['환기가 잘 안 되는 지하 주차장보다는, 볕이 드는 곳에 문을 열어두고 환기하는 시간을 늘리는 것도 도움이 됩니다.','음식물을 차 안에 오래 두지 않는 것이 냄새 예방의 기본입니다.'],
+    note:'방향제는 냄새를 가릴 뿐 원인을 없애지 못하므로, 베이킹소다로 흡착한 뒤 마지막에 취향에 맞는 향을 더하는 순서가 효과적입니다.' },
+  { id:'car-wiper-ice', cat:'car', title:'겨울철 와이퍼·유리 성에, 얼지 않게 미리 막는 법',
+    meta:'밤새 얼어붙은 와이퍼와 유리 성에를 아침에 빠르게 제거하고, 애초에 얼지 않게 예방하는 방법입니다.',
+    sub:'준비물: 신문지(또는 커버), 스크래퍼 · 소요 시간: 밤 5분 / 아침 5분',
+    intro:'겨울철 밤새 기온이 떨어지면 유리 표면과 와이퍼가 얼어붙어 아침마다 시간을 잡아먹습니다. 전날 밤 간단한 준비만으로 다음 날 아침 작업을 크게 줄일 수 있습니다.',
+    steps:['전날 밤 와이퍼를 유리에서 살짝 들어 세워두면 유리에 달라붙어 어는 것을 막을 수 있습니다.','앞유리에 큰 천이나 골판지, 신문지를 덮어두면 아침에 성에 없이 바로 시야를 확보할 수 있습니다.','이미 성에가 낀 경우, 뜨거운 물 대신 미지근한 물을 뿌려 급격한 온도 차로 인한 파손을 피합니다.','플라스틱 스크래퍼로 얼음을 살살 밀어내듯 제거하고, 시동을 걸어 히터로 마무리 건조합니다.'],
+    extra:['워셔액은 겨울용(부동액 성분 포함)으로 미리 교체해두면 얼어붙는 것을 막을 수 있습니다.','뜨거운 물을 바로 유리에 부으면 급격한 온도 차로 유리가 깨질 수 있으니 피해주세요.'],
+    note:'전날 밤 5분의 준비가 아침 출근길 시간을 훨씬 크게 아껴줍니다.' },
+
+  { id:'shoegear-yellowing', cat:'shoegear', title:'누렇게 변한 흰 운동화, 과탄산소다로 하얗게 되살리는 법',
+    meta:'황변이 생긴 흰 운동화를 과탄산소다와 중성세제로 다시 하얗게 되살리는 방법을 소개합니다.',
+    sub:'준비물: 과탄산소다, 중성세제, 칫솔 · 소요 시간: 30분',
+    intro:'흰 운동화가 누렇게 변하는 황변은 세탁 후 남은 세제 잔여물이 자외선을 받아 산화되며 생기는 경우가 많습니다. 온도와 헹굼, 건조 순서를 지키면 다시 하얗게 되돌릴 수 있습니다.',
+    steps:['운동화 끈과 깔창을 분리하고 먼지를 털어냅니다.','40~50도의 따뜻한 물에 과탄산소다와 중성세제를 1:1 비율로 풀어줍니다. 물이 너무 뜨거우면 접착제가 상할 수 있으니 온도를 지켜주세요.','운동화를 20~30분 담가 불린 뒤, 칫솔로 오염된 부분을 부드럽게 문질러 닦습니다.','깨끗한 물로 여러 번 헹구고, 신발 속에 키친타월이나 신문지를 넣어 그늘에서 자연 건조합니다.'],
+    extra:['과탄산소다는 강알칼리성이라 잔여물이 남으면 오히려 다시 누렇게 될 수 있으니 헹굼을 충분히 해주세요.','뜨거운 드라이기 바람은 접착제를 녹일 수 있으니 서늘한 그늘 건조를 원칙으로 합니다.'],
+    note:'건조할 때 신발 위에 마른 티슈를 덮어두면 잔여 세제를 흡수해 황변 재발을 줄일 수 있습니다.' },
+  { id:'shoegear-leather-scratch', cat:'shoegear', title:'가죽 가방 스크래치·얼룩, 집에서 관리하는 법',
+    meta:'가죽 가방에 생긴 잔스크래치와 가벼운 얼룩을 전문 케어 없이 집에서 관리하는 방법입니다.',
+    sub:'준비물: 가죽 전용 크림(또는 핸드크림), 부드러운 천 · 소요 시간: 15분',
+    intro:'가죽 표면의 얕은 스크래치는 대부분 표면 코팅이 눌리거나 벗겨진 것으로, 보습 성분을 채워주면 자국이 옅어지는 경우가 많습니다.',
+    steps:['먼저 마른 천으로 가방 표면의 먼지를 가볍게 닦아냅니다.','가죽 전용 크림이나 무향 핸드크림을 소량 덜어 스크래치 부위에 원을 그리듯 문질러줍니다.','마른 천으로 여분의 크림을 닦아내고, 자연광이 없는 그늘에서 완전히 흡수될 때까지 둡니다.','물 얼룩이 남은 경우 물티슈 대신 마른 천으로 먼저 두드려 흡수시킨 뒤 크림으로 마무리합니다.'],
+    extra:['밝은 색 가죽은 크림이 얼룩을 남길 수 있으니 눈에 띄지 않는 부분에 먼저 테스트하세요.','깊게 파인 스크래치나 찢어진 부분은 전문 수선을 받는 것이 안전합니다.'],
+    note:'가죽 제품은 3~6개월에 한 번 정도 전용 크림으로 보습해주면 스크래치와 갈라짐을 예방하는 데 도움이 됩니다.' },
+  { id:'shoegear-umbrella', cat:'shoegear', title:'우산·레인부츠, 냄새 안 나게 물기 관리하는 법',
+    meta:'장마철 우산과 레인부츠에서 나는 꿉꿉한 냄새를 물기 관리만으로 예방하는 방법을 소개합니다.',
+    sub:'준비물: 마른 수건, 신문지 · 소요 시간: 5분',
+    intro:'우산과 레인부츠 냄새는 접힌 상태로 물기가 마르지 않아 세균이 번식하며 나는 경우가 대부분입니다. 펼쳐서 말리는 것만으로도 냄새를 크게 줄일 수 있습니다.',
+    steps:['집에 들어오면 우산을 완전히 펼쳐 물기를 턴 뒤, 통풍이 되는 곳에 세워 펼친 채로 말립니다.','레인부츠는 신문지를 안쪽에 채워 넣어 습기를 흡수시키고 모양을 잡아줍니다.','완전히 마른 뒤에야 우산을 접거나 신발장에 넣습니다. 젖은 채로 보관하면 곰팡이와 냄새의 원인이 됩니다.','자주 사용하는 시즌에는 2~3일에 한 번 신문지를 교체해 습기를 관리합니다.'],
+    extra:['우산 살 부분에 물기가 남으면 녹이 슬기 쉬우니 접히는 부분도 마른 천으로 한 번씩 닦아주세요.','레인부츠 안쪽은 베이킹소다를 살짝 뿌려두면 냄새 예방에 더 효과적입니다.'],
+    note:'젖은 물건을 신발장이나 우산꽂이에 바로 넣는 습관만 바꿔도 장마철 냄새 고민의 상당 부분이 해결됩니다.' },
+];
+
+let currentCat = 'all';
+let currentQuery = '';
+let showFavOnly = false;
+let favorites = [];
+
+const listEl = document.getElementById('list');
+const chipsEl = document.getElementById('chips');
+const countEl = document.getElementById('resultCount');
+const searchInput = document.getElementById('searchInput');
+
+function catInfo(key){ return CATS.find(c => c.key === key); }
+
+function renderChips(){
+  const favCount = favorites.length;
+  let html = `<button class="chip ${currentCat==='all' && !showFavOnly ? 'active':''}" data-type="all">전체</button>`;
+  CATS.forEach(c => {
+    html += `<button class="chip ${currentCat===c.key && !showFavOnly ? 'active':''}" data-type="cat" data-key="${c.key}">${c.name}</button>`;
+  });
+  html += `<button class="chip fav ${showFavOnly ? 'active':''}" data-type="fav">★ 즐겨찾기${favCount ? ' '+favCount : ''}</button>`;
+  chipsEl.innerHTML = html;
+  chipsEl.querySelectorAll('.chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.dataset.type;
+      if(type === 'all'){ currentCat='all'; showFavOnly=false; }
+      else if(type === 'cat'){ currentCat = btn.dataset.key; showFavOnly=false; }
+      else if(type === 'fav'){ showFavOnly = !showFavOnly; }
+      renderChips();
+      renderList();
+    });
+  });
+}
+
+function starIcon(filled){
+  return filled
+    ? '<svg viewBox="0 0 24 24" fill="#B08D57" stroke="#B08D57" stroke-width="1.5"><polygon points="12 2 15.09 8.63 22 9.27 16.5 14.14 18.18 21 12 17.27 5.82 21 7.5 14.14 2 9.27 8.91 8.63"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="#55493A" stroke-width="1.5"><polygon points="12 2 15.09 8.63 22 9.27 16.5 14.14 18.18 21 12 17.27 5.82 21 7.5 14.14 2 9.27 8.91 8.63"/></svg>';
+}
+
+function filteredTips(){
+  return TIPS.filter(t => {
+    if(showFavOnly && !favorites.includes(t.id)) return false;
+    if(!showFavOnly && currentCat !== 'all' && t.cat !== currentCat) return false;
+    if(currentQuery){
+      const q = currentQuery.toLowerCase();
+      const hay = (t.title + ' ' + t.meta + ' ' + catInfo(t.cat).name).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function renderList(){
+  const items = filteredTips();
+  countEl.textContent = `카드 ${items.length}장`;
+  if(items.length === 0){
+    listEl.innerHTML = `<div class="empty"><div class="big">🗂️</div>${showFavOnly ? '아직 즐겨찾기한 카드가 없어요.' : '검색 결과가 없어요. 다른 키워드로 찾아보세요.'}</div>`;
+    return;
+  }
+  listEl.innerHTML = items.map(t => {
+    const c = catInfo(t.cat);
+    const fav = favorites.includes(t.id);
+    return `
+    <div class="card-entry" style="--accent:${c.color}" data-id="${t.id}">
+      <div class="body">
+        <span class="tag">${c.name}</span>
+        <h3>${t.title}</h3>
+        <p>${t.meta}</p>
+      </div>
+      <button class="star-btn" data-fav="${t.id}">${starIcon(fav)}</button>
+    </div>`;
+  }).join('');
+
+  listEl.querySelectorAll('.card-entry').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if(e.target.closest('.star-btn')) return;
+      openSheet(el.dataset.id);
+    });
+  });
+  listEl.querySelectorAll('.star-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFav(btn.dataset.fav);
+    });
+  });
+}
+
+async function loadFavorites(){
+  try{
+    const res = await window.storage.get('favorites', false);
+    favorites = res && res.value ? JSON.parse(res.value) : [];
+  }catch(err){
+    favorites = [];
+  }
+}
+
+async function saveFavorites(){
+  try{
+    await window.storage.set('favorites', JSON.stringify(favorites), false);
+  }catch(err){
+    console.error('즐겨찾기 저장 실패', err);
+  }
+}
+
+function toggleFav(id){
+  if(favorites.includes(id)){
+    favorites = favorites.filter(f => f !== id);
+  }else{
+    favorites.push(id);
+  }
+  saveFavorites();
+  renderChips();
+  renderList();
+  if(sheet.classList.contains('open') && sheet.dataset.currentId === id){
+    updateSheetFavBtn(id);
+  }
+}
+
+const overlay = document.getElementById('overlay');
+const sheet = document.getElementById('sheet');
+
+function updateSheetFavBtn(id){
+  const isFav = favorites.includes(id);
+  const btn = document.getElementById('sheetFavBtn');
+  btn.className = 'sheet-fav' + (isFav ? ' active' : '');
+  btn.innerHTML = (isFav ? '★ 즐겨찾기 해제' : '☆ 즐겨찾기에 담기');
+}
+
+function renderBuyLinks(t){
+  const buyEl = document.getElementById('sheetBuy');
+  const matched = Object.keys(AFFILIATE_LINKS)
+    .filter(k => AFFILIATE_LINKS[k] && t.sub.includes(k))
+    .map(k => ({ name:k, url:AFFILIATE_LINKS[k] }));
+  const extra = TIP_EXTRA_LINKS[t.id] || [];
+  const items = matched.concat(extra.filter(e => e.url));
+  if(items.length === 0){
+    buyEl.innerHTML = '';
+    return;
+  }
+  const chips = items.map(item =>
+    `<a class="buy-chip" href="${item.url}" target="_blank" rel="noopener sponsored">🛒 ${item.name} 제품구경하기</a>`
+  ).join('');
+  buyEl.innerHTML = `<div class="buy-label">이 카드에 필요한 재료</div>${chips}`;
+}
+
+function openSheet(id){
+  const t = TIPS.find(x => x.id === id);
+  if(!t) return;
+  const c = catInfo(t.cat);
+  sheet.dataset.currentId = id;
+  document.getElementById('sheetCallno').textContent = `${c.name} · 생활도서관`;
+  document.getElementById('sheetTitle').textContent = t.title;
+  document.getElementById('sheetSub').textContent = t.sub;
+  document.getElementById('sheetIntro').textContent = t.intro;
+  document.getElementById('sheetSteps').innerHTML = t.steps.map(s => `<li>${s}</li>`).join('');
+  document.getElementById('sheetExtra').innerHTML = t.extra.map(s => `<li>${s}</li>`).join('');
+  document.getElementById('sheetNote').textContent = '💡 ' + t.note;
+  renderBuyLinks(t);
+  updateSheetFavBtn(id);
+  overlay.classList.add('open');
+  sheet.classList.add('open');
+}
+
+function closeSheet(){
+  overlay.classList.remove('open');
+  sheet.classList.remove('open');
+}
+
+document.getElementById('closeBtn').addEventListener('click', closeSheet);
+overlay.addEventListener('click', closeSheet);
+document.getElementById('sheetFavBtn').addEventListener('click', () => {
+  toggleFav(sheet.dataset.currentId);
+});
+
+let debounceTimer;
+searchInput.addEventListener('input', (e) => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    currentQuery = e.target.value.trim();
+    renderList();
+  }, 150);
+});
+
+/* Toast */
+let toastTimer;
+function showToast(msg){
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+}
+
+/* Cover screen */
+function renderCoverCats(){
+  document.getElementById('coverCats').innerHTML =
+    CATS.map(c => `<span>${c.name}</span>`).join('');
+}
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('cover').classList.add('hide');
+});
+
+/* Share: whole app */
+async function shareApp(){
+  const shareData = {
+    title: '생활도서관 - 생활의 지혜 미니앱',
+    text: '세탁, 곰팡이, 냄새, 자동차 관리까지 - 생활 꿀팁 36가지를 카드로 모은 미니앱이에요!',
+    url: window.location.href
+  };
+  try{
+    if(navigator.share){
+      await navigator.share(shareData);
+      return;
+    }
+  }catch(err){ return; }
+  try{
+    await navigator.clipboard.writeText(shareData.url);
+    showToast('링크를 복사했어요. 카카오톡이나 문자에 붙여넣어 보내보세요 📋');
+  }catch(err){
+    showToast('이 파일을 카카오톡이나 이메일로 그대로 보내면 상대방도 바로 열어볼 수 있어요 📎');
+  }
+}
+document.getElementById('shareBtn').addEventListener('click', shareApp);
+
+/* Share: single card */
+async function shareCard(id){
+  const t = TIPS.find(x => x.id === id);
+  if(!t) return;
+  const c = catInfo(t.cat);
+  const text = `[생활도서관 · ${c.name}]\n${t.title}\n\n${t.meta}\n\n${t.sub}`;
+  try{
+    if(navigator.share){
+      await navigator.share({ title: t.title, text });
+      return;
+    }
+  }catch(err){ return; }
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast('카드 내용을 복사했어요. 원하는 곳에 붙여넣어 보내보세요 📋');
+  }catch(err){
+    showToast('공유하기가 지원되지 않는 브라우저예요.');
+  }
+}
+document.getElementById('sheetShareBtn').addEventListener('click', () => {
+  if(sheet.dataset.currentId) shareCard(sheet.dataset.currentId);
+});
+
+(async function init(){
+  renderCoverCats();
+  const hasAnyAffiliateLink = Object.values(AFFILIATE_LINKS).some(v => v)
+    || Object.values(TIP_EXTRA_LINKS).some(arr => arr.some(e => e.url));
+  if(hasAnyAffiliateLink){
+    document.getElementById('disclosure').style.display = 'block';
+  }
+  await loadFavorites();
+  renderChips();
+  renderList();
+})();
+</script>
+</body>
+</html>
